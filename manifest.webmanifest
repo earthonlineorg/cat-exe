@@ -1,0 +1,52 @@
+{
+  "id": "./index.html",
+  "name": "EARTH.ONLINE 人生服务器",
+  "short_name": "EARTH.ONLINE",
+  "description": "把真实人生做成一场长期在线、不可重开的开放世界游戏。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#08080a",
+  "theme_color": "#08080a",
+  "categories": ["social", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "assets/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/logo-earth.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "能工智人",
+      "short_name": "智人",
+      "url": "artisan.html?source=shortcut"
+    },
+    {
+      "name": "社区",
+      "short_name": "社区",
+      "url": "bug.html?source=shortcut"
+    },
+    {
+      "name": "基金会",
+      "short_name": "基金会",
+      "url": "foundation.html?source=shortcut"
+    },
+    {
+      "name": "我的档案",
+      "short_name": "我的",
+      "url": "character.html#profile-card"
+    }
+  ]
+}

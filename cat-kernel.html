@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>猫.EXE — 地球Online运维测试</title>
+<meta name="description" content="地球Online运维测试：接管一只并发运行、优先级混乱、随时自行宕机的猫。">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#08080a">
+<script src="assets/theme-boot.js?v=ER20260717site13"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;family=Space+Grotesk:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=ER20260713r20">
+<link rel="stylesheet" href="assets/mobile.css?v=ER20260813cat-entry2">
+<link rel="stylesheet" href="assets/site-theme.css?v=ER20260717site13">
+<link rel="stylesheet" href="assets/cat-kernel.css?v=ER20260813cat-entry3">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/logo-earth.png">
+<script src="assets/mobile-shell.js?v=ER20260813cat-entry2" defer></script>
+<script src="assets/site-theme.js?v=ER20260717site13" defer></script>
+<script src="assets/session.js?v=ER20260717site13"></script>
+<script src="assets/challenge.js?v=ER20260713r19"></script>
+</head>
+<body class="cat-kernel-page cat-kernel-intro">
+
+<div class="strip" role="status">
+  <span class="ver">EARTH.ONLINE</span><span class="sep">/</span>
+  <span class="mono">猫.EXE / v9.LIVES</span><span class="sep">|</span>
+  <span class="up">说明文档可信度 14%</span><span class="spacer"></span>
+  <span class="dot"></span><span class="up">UNSTABLE</span>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <button class="brand-logo-link site-theme-toggle" type="button" data-site-theme-toggle aria-label="切换到明亮模式" aria-pressed="false" title="明暗模式"><img class="brand-logo" src="assets/logo-earth.webp" alt="" width="46" height="46"></button>
+      <a class="brand-name" href="index.html">地球<span class="en">Online</span></a>
+    </div>
+    <div class="nav-links">
+      <a href="character.html">角色档案</a><a href="bug.html">玩家社区</a><a href="task.html">悬赏任务</a>
+      <a href="artisan.html">能工智人</a><a href="shop.html">商城</a><a href="review.html">评价</a>
+      <a href="news.html">新闻</a><a href="foundation.html">基金会</a>
+    </div>
+    <button class="nav-burger" type="button" aria-label="menu"><svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M0 1h16M0 7h16M0 13h16" stroke="currentColor" stroke-width="1.4"/></svg></button>
+  </div>
+</nav>
+
+<main class="ck-intro-main">
+  <section class="ck-intro-hero">
+    <div class="ck-intro-copy">
+      <p class="ck-kicker"><span></span> 地球online运维测试</p>
+      <h1>猫<em>.EXE</em></h1>
+      <p class="ck-intro-lead">你将接管一只没有文档、优先级不透明、随时自行运行代码的猫。你的任务不是让它听话——只是尽量别让它宕机。</p>
+      <div class="ck-intro-actions">
+        <a class="ck-start-button" href="cat-kernel-play.html"><span>开始体验</span><small>启动 CAT.EXE →</small></a>
+        <span class="ck-start-note">游客九条命 · 成绩自动上榜 · 不保证猫咪配合</span>
+      </div>
+    </div>
+
+    <div class="ck-intro-cat" aria-label="猫咪内核示意图">
+      <span class="ck-intro-stamp">LEGACY CORE</span>
+      <svg viewBox="0 0 520 390" role="img" aria-label="一只等待维护的简笔画猫咪">
+        <path d="M52 330H470"/>
+        <path class="ck-intro-tail" d="M342 274c84-14 112-78 83-115-19-24-52-4-39 21 9 18 34 5 24-13"/>
+        <path d="M190 225c22-39 65-55 109-42 49 15 71 61 58 112-4 16-19 28-36 28H199c-27 0-44-25-35-50 6-16 14-34 26-48z"/>
+        <path d="M201 280l-3 43M250 290l-1 33M313 289l7 34M349 275l4 48M187 323h24M237 323h24M307 323h26M341 323h25"/>
+        <path d="M169 199c-13-27-9-70 10-94l9-47 38 36c19-5 39-4 57 1l41-34 6 54c15 27 13 66-6 87-31 33-119 28-155-3z"/>
+        <path d="M188 94l4-18 19 20M292 96l25-20 1 29M204 143l18 2M278 145l18-2"/>
+        <circle cx="217" cy="146" r="4" class="ck-fill"/><circle cx="285" cy="146" r="4" class="ck-fill"/>
+        <path d="M245 165l8 6 8-6M253 171v9M253 180c-8 7-16 6-21 0M253 180c8 7 16 6 21 0M207 172l-58-10M207 183l-60 7M302 172l59-11M301 184l62 9"/>
+      </svg>
+      <div class="ck-intro-status"><i></i><span>当前状态</span><b>假装无事发生</b></div>
+    </div>
+  </section>
+
+  <section class="ck-intro-flow" aria-labelledby="flowTitle">
+    <header><span>先看懂这个经典事故</span><h2 id="flowTitle">一段只需要四步形成的死循环</h2></header>
+    <div class="ck-loop-flow">
+      <div><b>01</b><span>头顶感应到异物</span><small>尝试执行清除</small></div><i>→</i>
+      <div><b>02</b><span>抬爪靠近头顶</span><small>前肢进入工作区</small></div><i>→</i>
+      <div><b>03</b><span>前肢靠近嘴巴</span><small>误触舔毛代码</small></div><i>→</i>
+      <div><b>04</b><span>再次感应到异物</span><small>回到第一步</small></div><i class="ck-loop-back">↺</i>
+    </div>
+    <pre><code>当（头顶存在异物）{
+  抬爪清除();
+  舔毛();      // 前肢靠近嘴巴，自动触发
+  重新检测();  // 异物仍在，回到开头
+}</code></pre>
+  </section>
+
+  <section class="ck-intro-rules">
+    <header><span>维护前须知</span><h2>你能控制代码，控制不了猫</h2></header>
+    <div class="ck-intro-rule-grid">
+      <article><b>01 / 每日内核</b><h3>同一天，共享同一只病猫</h3><p>每日种子固定猫格、随机池与两条隐藏冲突；每次重启则沿当天种子切换下一种人格。</p></article>
+      <article><b>02 / 自适应反制</b><h3>猫会记仇，也会学习</h3><p>反复摸猫、投喂或使用舔毛抢救会累积偏见；调度器会提高哈气、拒食和提前舔毛的概率。</p></article>
+      <article><b>03 / 冲突</b><h3>水和速度不是朋友</h3><p>某些代码单独合法，并发会触发 10 秒动态崩溃倒计时。规则会告诉你一些，但不会告诉你全部。</p></article>
+      <article><b>04 / 抢救</b><h3>每次插码都在改命</h3><p>高优先级代码可直接热修复；其余代码会续命或催命，连续三次同方向操作还会触发时间连击。</p></article>
+      <article><b>05 / 场景输入</b><h3>别只盯着代码库</h3><p>纸箱、饭碗、尾巴和窗外都能点按、长按或三连点；在猫身上滑动还会直接写入身体总线。</p></article>
+      <article><b>06 / 隐藏组合</b><h3>事故也能形成 Combo</h3><p>凌晨运动会、薛定谔纸箱、自己的手是敌人等组合不会提前公开，只在触发时留下证据。</p></article>
+      <article><b>07 / 玄学代码</b><h3>预览结果：不知道</h3><p>少数代码拒绝提供倒计时影响，可能大幅续命、疯狂催命，或者把剩余时间写成 0.45 秒。</p></article>
+      <article><b>08 / 宕机尸检</b><h3>死也要死得有调用栈</h3><p>每次宕机都会回放最后七段关键日志、生成死因称号，并把猫格与每日种子写进本机排行榜。</p></article>
+    </div>
+  </section>
+
+  <a class="ck-intro-atlas-link" href="cat-kernel-rules.html"><span>事故知识库</span><strong>查看本机已解锁规则</strong><small>未亲手触发的规则不会显示 →</small></a>
+
+  <section class="ck-intro-ranking" aria-labelledby="rankingTitle">
+    <header><span>CAT.EXE / 生存排行榜</span><h2 id="rankingTitle">谁把这坨代码维护得最久</h2></header>
+    <div class="ck-ranking-toolbar">
+      <div class="ck-ranking-tabs" role="tablist" aria-label="排行榜日期">
+        <button class="is-active" type="button" role="tab" aria-selected="true" data-ranking-day="today">今日榜</button>
+        <button type="button" role="tab" aria-selected="false" data-ranking-day="yesterday">昨日榜</button>
+      </div>
+      <span id="rankingUpdated">每日 00:00 更新 · 仅保留两天</span>
+    </div>
+    <div class="ck-ranking-shell">
+      <aside>
+        <span id="rankingScopeLabel">全服今日最佳</span><strong id="rankingBest">00:00</strong>
+        <small><b id="rankingPlayers">0</b> 位维护员 · <b id="rankingSubmissions">0</b> 次结算</small>
+        <small class="ck-daily-ranking"><b id="rankingSeed">CAT-DAILY</b> · 昨日最佳 <b id="rankingYesterdayBest">00:00</b></small>
+      </aside>
+      <ol class="ck-ranking-list" id="rankingList" aria-label="猫咪内核生存排行榜"></ol>
+    </div>
+    <p class="ck-ranking-note"><b id="rankingStatus" data-state="loading">正在连接全服榜</b> · 每日同一挑战种子；每个账号或匿名终端每天只保留最高成绩，过期记录自动清理。</p>
+  </section>
+
+  <section class="ck-intro-final">
+    <div><span>MAINTENANCE WINDOW READY</span><h2>文档看到这里就够了。<br>剩下的错误需要亲手制造。</h2></div>
+    <a class="ck-start-button" href="cat-kernel-play.html"><span>开始体验</span><small>我已阅读但并未理解 →</small></a>
+  </section>
+</main>
+
+<script src="assets/app.js?v=ER20260813cat-entry1"></script>
+<script src="assets/cat-kernel-home.js?v=ER20260813cat-entry3"></script>
+</body>
+</html>

@@ -1,0 +1,1274 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>CHARACTER LOGIN / 角色登录 — EARTH.ONLINE</title>
+<meta name="color-scheme" content="dark light" />
+<script src="assets/theme-boot.js?v=ER20260717site13"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=ER20260727aiornot1">
+<style>
+/* ────── intercept.html 独占样式 ────── */
+
+/* 全屏遮罩 */
+.intercept-mask{
+  position:fixed;inset:0;z-index:200;
+  background:#000;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  animation:interceptFadeIn .8s ease;
+}
+@keyframes interceptFadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.intercept-content{
+  max-width:600px;width:100%;text-align:center;
+}
+
+/* ── 步进动画 ── */
+.intercept-content > *{
+  opacity:0;
+  transform:translateY(8px);
+  animation:interceptStepIn .5s ease forwards;
+}
+.intercept-console{animation-delay:.1s}
+.intercept-title{animation-delay:.5s}
+.intercept-sub{animation-delay:.85s}
+.intercept-actions{animation-delay:1.15s}
+@keyframes interceptStepIn{
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* 控制台行 */
+.intercept-console{
+  font-family:var(--mono);
+  font-size:clamp(13px,2.2vw,16px);
+  color:var(--ink-1);
+  letter-spacing:.08em;
+  margin-bottom:40px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.intercept-console .cursor-blink{
+  color:var(--rust-3);
+  animation:cursorBlink .8s step-end infinite;
+  font-weight:600;
+}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+.intercept-console .prompt{color:var(--rust-3);font-weight:500}
+.intercept-console .msg{color:var(--ink-0)}
+
+/* 主标题 */
+.intercept-title{
+  font-family:var(--cn);font-weight:500;
+  font-size:clamp(28px,4.6vw,48px);
+  color:var(--ink-0);
+  line-height:1.2;
+  margin-bottom:16px;
+}
+.intercept-title .accent{color:var(--rust-3)}
+
+/* 副标题 */
+.intercept-sub{
+  font-family:var(--cn);
+  font-size:clamp(14px,1.8vw,17px);
+  color:var(--ink-1);
+  line-height:1.7;
+  margin-bottom:48px;
+  max-width:420px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* 按钮区 */
+.intercept-actions{
+  display:flex;justify-content:center;gap:14px;flex-wrap:wrap;
+}
+.intercept-content.is-login-mode .intercept-actions{display:none}
+
+.intercept-login-form{
+  display:grid;
+  gap:12px;
+  max-width:500px;
+  margin:22px auto 0;
+  padding:16px;
+  border:1px solid var(--line-2);
+  background:rgba(255,255,255,.035);
+  text-align:left;
+}
+.intercept-login-form[hidden]{display:none}
+#loginPasswordWrap[hidden],
+#loginCodeWrap[hidden]{display:none}
+.login-text-action{align-self:stretch;min-height:44px;margin-top:-5px;padding:8px 0;border:0;background:transparent;color:var(--amber);font:11px/1.2 var(--cn);cursor:pointer;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;justify-content:flex-end}
+.intercept-login-form label{
+  display:grid;
+  gap:7px;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--ink-2);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.intercept-login-form input{
+  width:100%;
+  border:1px solid var(--line-2);
+  background:rgba(0,0,0,.36);
+  color:var(--ink-0);
+  padding:12px 13px;
+  border-radius:2px;
+  font:500 14px var(--cn);
+  outline:none;
+}
+.intercept-login-form input:focus{
+  border-color:var(--rust-3);
+  box-shadow:0 0 0 3px rgba(204,0,0,.12);
+}
+.intercept-login-form .login-form-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:2px;
+}
+.intercept-login-form .login-hint{
+  font-family:var(--cn);
+  font-size:12px;
+  color:var(--ink-2);
+  line-height:1.6;
+}
+.login-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.login-mode-tabs button{
+  border:1px solid var(--line-2);
+  background:rgba(255,255,255,.025);
+  color:var(--ink-2);
+  padding:10px 12px;
+  font:600 11px var(--mono);
+  letter-spacing:.1em;
+  cursor:pointer;
+}
+.login-mode-tabs button.active{border-color:var(--rust-3);color:var(--ink-0);background:rgba(204,0,0,.08)}
+.login-code-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.login-code-row button{white-space:nowrap}
+.login-code-row button:disabled{opacity:.55;cursor:wait}
+.login-policy-check{
+  display:grid !important;
+  grid-template-columns:auto 1fr;
+  align-items:start;
+  gap:10px !important;
+  padding:12px;
+  border:1px dashed var(--line-2);
+  background:rgba(255,255,255,.02);
+  cursor:pointer;
+}
+.login-policy-check input{width:auto;margin-top:4px;accent-color:var(--rust)}
+.login-policy-check span{
+  font-family:var(--cn);
+  font-size:12px;
+  line-height:1.65;
+  color:var(--ink-1);
+  letter-spacing:0;
+  text-transform:none;
+}
+.login-alt-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  padding-top:4px;
+}
+.login-alt-actions .btn{flex:1 1 180px;justify-content:center}
+
+/* 登出/告辞后的反馈文字 */
+.intercept-feedback{
+  font-family:var(--cn);
+  font-size:14px;
+  color:var(--ink-1);
+  line-height:1.8;
+  margin-top:24px;
+  min-height:48px;
+  transition:all .3s ease;
+}
+.intercept-feedback .icon{
+  display:inline-block;
+  margin-right:8px;
+  font-family:var(--mono);
+  color:var(--amber);
+}
+.intercept-feedback.is-loading{
+  color:var(--ink-0);
+}
+.login-connecting{
+  position:relative;
+  display:inline-block;
+  padding:0 2px 10px;
+  isolation:isolate;
+}
+.login-connecting .text{
+  position:relative;
+  z-index:1;
+  display:inline-block;
+  font-family:var(--cn);
+  letter-spacing:.04em;
+}
+.login-connecting::before,
+.login-connecting::after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:1px;
+  height:1px;
+  pointer-events:none;
+}
+.login-connecting::before{
+  background:linear-gradient(90deg,transparent,rgba(224,184,51,.36),rgba(155,58,43,.3),transparent);
+  opacity:.62;
+}
+.login-connecting::after{
+  width:42%;
+  right:auto;
+  background:linear-gradient(90deg,transparent,rgba(224,184,51,.95),rgba(255,255,255,.72),transparent);
+  filter:drop-shadow(0 0 8px rgba(224,184,51,.22));
+  transform:translate3d(-38%,0,0) scaleX(.35);
+  transform-origin:center;
+  animation:loginSignalSweep 1.85s cubic-bezier(.77,0,.175,1) infinite;
+}
+@keyframes loginSignalSweep{
+  0%{transform:translate3d(-38%,0,0) scaleX(.28);opacity:0}
+  14%{opacity:.72}
+  42%{transform:translate3d(72%,0,0) scaleX(1);opacity:1}
+  67%{transform:translate3d(138%,0,0) scaleX(.36);opacity:0}
+  100%{transform:translate3d(138%,0,0) scaleX(.36);opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .login-connecting::after{animation:none;opacity:.45;transform:translate3d(28%,0,0) scaleX(.8)}
+}
+
+/* 告辞按钮的三个阶段 */
+#btn-quit.phase-1{opacity:0.5;border-color:var(--ink-2);color:var(--ink-2);cursor:default;pointer-events:none}
+#btn-quit.phase-2{animation:quitShake .4s ease;opacity:0.35;border-color:var(--ink-3);color:var(--ink-3);cursor:default;pointer-events:none}
+.login-alt-actions .btn.phase-1{opacity:.5;border-color:var(--ink-2);color:var(--ink-2);cursor:default;pointer-events:none}
+@keyframes quitShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-4px)}
+  40%{transform:translateX(4px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(3px)}
+}
+#btn-quit.hidden{display:none}
+
+/* 登录按钮被按后的激励感 */
+#btn-login.clicked,
+#btn-existing.clicked{
+  border-color:var(--green);
+  color:var(--green);
+  background:rgba(90,155,106,.1);
+  animation:loginPulse 1.2s ease 2;
+}
+@keyframes loginPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(90,155,106,.3)}
+  50%{box-shadow:0 0 0 12px rgba(90,155,106,0)}
+}
+
+/* 成就弹窗 */
+.intercept-achievement{
+  margin-top:24px;
+  padding:12px 18px;
+  border:1px dashed var(--amber);
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--amber);
+  letter-spacing:.14em;
+  animation:achieveFade .5s ease;
+}
+@keyframes achieveFade{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* 底部小字提示 + 低矮屏幕隐藏 */
+.intercept-footnote{
+  position:fixed;
+  bottom:24px;
+  left:50%;transform:translateX(-50%);
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--ink-3);
+  letter-spacing:.16em;
+  text-align:center;
+  transition:opacity .3s;
+}
+@media(max-height:600px){
+  .intercept-footnote{opacity:0;pointer-events:none}
+}
+
+/* 底部「回到主世界」链接 */
+.intercept-escape{
+  position:fixed;
+  bottom:48px;
+  left:50%;transform:translateX(-50%);
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--ink-3);
+  opacity:.15;
+  letter-spacing:.12em;
+  cursor:pointer;
+  transition:opacity .3s;
+  text-decoration:none;
+  z-index:201;
+}
+.intercept-escape:hover{opacity:.5}
+.login-page-mode .intercept-escape{display:none}
+@media(max-width:640px){
+  .intercept-escape{bottom:44px}
+}
+@media(max-height:600px){
+  .intercept-escape{display:none}
+}
+
+/* 移动端适配 */
+@media(max-width:640px){
+  .intercept-actions .btn.btn,.intercept-actions .btn.btn.primary,.intercept-actions .btn.btn.ghost{
+    padding:18px 22px !important;
+    min-width:0;
+    width:100%;
+  }
+  .intercept-mask{
+    padding:max(18px,env(safe-area-inset-top)) 14px max(88px,calc(env(safe-area-inset-bottom) + 72px));
+  }
+  .login-page-mode .intercept-mask{align-items:flex-start}
+  .intercept-content{max-width:100%;margin:auto 0}
+  .login-page-mode .intercept-content{margin:0}
+  .intercept-login-form{padding:13px;gap:10px;margin-top:16px}
+  .intercept-login-form .login-form-actions{align-items:flex-start;flex-direction:column}
+  .login-code-row{grid-template-columns:minmax(0,1fr) auto}
+  .login-code-row .btn{padding-inline:12px!important}
+}
+</style>
+<link rel="stylesheet" href="assets/eo-launch.css?v=ER20260629p2">
+<meta name="theme-color" content="#08080a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EARTH.ONLINE">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/logo-earth.png">
+<link rel="stylesheet" href="assets/mobile.css?v=20260716legal2">
+<script src="assets/mobile-shell.js?v=ER20260727aiornot2" defer></script>
+<script src="assets/site-theme.js?v=ER20260717site13" defer></script>
+<script src="assets/session.js?v=ER20260717site13"></script>
+<script src="assets/challenge.js?v=ER20260713r19"></script>
+<link rel="stylesheet" href="assets/site-theme.css?v=ER20260717site13">
+</head>
+<body>
+
+<!-- ===== 全屏拦截遮罩 ===== -->
+<div class="intercept-mask" id="interceptMask">
+  <div class="intercept-content">
+    <!-- 控制台行 -->
+    <div class="intercept-console">
+      <span class="cursor-blink">_</span>
+      <span class="prompt">SYSTEM://</span>
+      <span class="msg">检测到未登录的生命信号。</span>
+    </div>
+
+    <!-- 主标题 -->
+    <h1 class="intercept-title">
+      请先登录您的<span class="accent">角色档案</span>
+    </h1>
+
+    <!-- 副标题 -->
+    <p class="intercept-sub">
+      每个角色都是唯一的。<br>
+      此操作不可回滚。
+    </p>
+
+    <!-- 按钮区 -->
+    <div class="intercept-actions">
+      <a class="btn primary" id="btn-login">新建角色档案</a>
+      <a class="btn ghost" id="btn-existing">登录已有账号</a>
+      <button class="btn ghost" id="btn-quit">无意冒犯，告辞</button>
+    </div>
+
+    <form class="intercept-login-form" id="existingLoginForm" hidden>
+      <div class="login-mode-tabs" role="tablist" aria-label="登录方式">
+        <button type="button" class="active" id="loginModePassword">密码登录</button>
+        <button type="button" id="loginModeCode" hidden>验证码登录</button>
+      </div>
+      <label>
+        手机 / 邮箱 · PHONE / EMAIL
+        <input id="loginAccount" type="text" inputmode="text" enterkeyhint="next" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="输入注册手机号或邮箱" />
+      </label>
+      <label id="loginPasswordWrap">
+        密码 / PASSWORD
+        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="输入您的登录密码" />
+        <button class="login-text-action" id="loginForgotPassword" type="button">忘记密码？</button>
+      </label>
+      <label id="loginCodeWrap" hidden>
+        验证码 / SECURITY CODE
+        <div class="login-code-row">
+          <input id="loginCode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="输入4位数验证码" maxlength="4" />
+          <button class="btn ghost sm" id="loginSendCodeBtn" type="button">发送验证码</button>
+        </div>
+      </label>
+      <label class="login-policy-check">
+        <input id="loginPolicy" type="checkbox" />
+        <span>我已阅读并同意<a class="legal-link" href="policy.html" target="_blank" rel="noopener">《玩家隐私政策》</a><a class="legal-link" href="terms.html" target="_blank" rel="noopener">《服务器一命通关条款》</a><a class="legal-link" href="nodelete.html" target="_blank" rel="noopener">《不可重开告知书》</a>及后续版本追加的全部补充条款。</span>
+      </label>
+      <div class="login-form-actions">
+        <span class="login-hint">没有账号？点击新建角色档案。</span>
+        <a class="btn ghost sm" id="loginCreateBtn">新建角色档案 <span class="arr"></span></a>
+      </div>
+      <div class="login-alt-actions">
+        <button class="btn primary sm" id="loginSubmitBtn" type="submit">进入个人档案 <span class="arr"></span></button>
+        <button class="btn ghost sm" id="loginQuitBtn" type="button">无意冒犯，告辞</button>
+      </div>
+    </form>
+
+    <form class="intercept-login-form" id="resetPasswordForm" hidden>
+      <div class="login-mode-tabs" aria-hidden="true"><button type="button" class="active" tabindex="-1">找回密码</button></div>
+      <label>
+        注册手机 / 邮箱 · PHONE / EMAIL
+        <input id="resetAccount" type="text" inputmode="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="输入注册手机号或邮箱" />
+      </label>
+      <label>
+        验证码 / SECURITY CODE
+        <div class="login-code-row">
+          <input id="resetCode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="输入4位数验证码" maxlength="4" />
+          <button class="btn ghost sm" id="resetSendCodeBtn" type="button">发送验证码</button>
+        </div>
+      </label>
+      <label>
+        新密码 / NEW PASSWORD
+        <input id="resetPassword" type="password" autocomplete="new-password" minlength="8" placeholder="至少 8 位" />
+      </label>
+      <label>
+        确认新密码 / CONFIRM
+        <input id="resetPasswordConfirm" type="password" autocomplete="new-password" minlength="8" placeholder="再次输入新密码" />
+      </label>
+      <div class="login-alt-actions">
+        <button class="btn ghost sm" id="resetCancelBtn" type="button">返回登录</button>
+        <button class="btn primary sm" id="resetSubmitBtn" type="submit">重置密码 <span class="arr"></span></button>
+      </div>
+    </form>
+
+    <!-- 反馈文字区 -->
+    <div class="intercept-feedback" id="interceptFeedback" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- ===== 底部小字 ===== -->
+<div class="intercept-footnote">您访问的内容需要激活角色档案</div>
+<a class="intercept-escape" id="escapeLink" href="#">回到主世界</a>
+
+<script src="assets/progress.js?v=ER20260713r19"></script>
+<script src="assets/achievements.js?v=ER20260708a"></script>
+<script>
+/* ────── 拦截页 JS ────── */
+
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var isLoginEntry = params.get('entry') === 'login';
+  var isAiornotFlow = params.get('flow') === 'aiornot';
+  var AIORNOT_CALLBACK_URL = 'https://aiornot.earthonline.org.cn/auth/callback';
+  var AIORNOT_STATE_PATTERN = /^[A-Za-z0-9_-]{16,128}$/;
+  var AIORNOT_CHALLENGE_PATTERN = /^[A-Za-z0-9_-]{43,128}$/;
+
+  /* 登录后的回跳只允许网站目录内的已知页面。query 逐页白名单，hash 仅允许
+     简单锚点，避免 next 变成开放重定向或 javascript: 执行入口。 */
+  var SAFE_NEXT_PAGES = Object.create(null);
+  ('achievements.html aid.html aid-module.html artisan.html artisan-chat.html artisan-console.html backpack.html bill.html bounty.html bug.html cart.html cat-kernel.html cat-kernel-play.html cat-kernel-rules.html character.html chatroom.html contact.html dream.html foundation.html inbox.html index.html join.html ledger.html ledger-module.html medal.html news.html news-detail.html nodelete.html offline.html orders.html party.html policy.html post-detail.html post-publish.html product.html project.html project-module.html publish-bug.html publish-guide.html publish-log.html review.html review-detail.html review-publish.html save.html search.html shop.html task.html terms.html wallet.html world.html')
+    .split(' ').forEach(function(page){ SAFE_NEXT_PAGES[page] = true; });
+  var SAFE_NEXT_QUERY = {
+    'artisan-chat.html': { mode:'artisanMode', panel:'artisanPanel', order:'id' },
+    'character.html': { uid:'uid', mode:'registerMode' },
+    'inbox.html': { c:'id', dm:'uid', uid:'uid' },
+    'post-detail.html': { id:'id' },
+    'post-publish.html': { type:'postType' },
+    'product.html': { id:'id' },
+    'publish-guide.html': { fromTask:'id' },
+    'review-detail.html': { id:'id' }
+  };
+  function validNextValue(kind, value){
+    value = String(value || '');
+    if(kind === 'uid') return /^EO-[A-Za-z0-9-]{3,80}$/.test(value);
+    if(kind === 'artisanMode') return /^(artisan|user)$/.test(value);
+    if(kind === 'artisanPanel') return value === 'history';
+    if(kind === 'registerMode') return value === 'register';
+    if(kind === 'postType') return /^(guide|log|bug)$/.test(value);
+    return /^[A-Za-z0-9][A-Za-z0-9._:#-]{0,127}$/.test(value);
+  }
+  function safeNext(raw, fallback){
+    fallback = fallback || 'character.html#profile-card';
+    raw = String(raw || '').trim();
+    if(!raw || raw.length > 420 || /[\u0000-\u001f]/.test(raw)) return fallback;
+    try{
+      var target = new URL(raw, location.href);
+      if(target.origin !== location.origin || target.username || target.password) return fallback;
+      var basePath = location.pathname.replace(/[^/]*$/, '');
+      if(target.pathname.indexOf(basePath) !== 0) return fallback;
+      var page = decodeURIComponent(target.pathname.slice(basePath.length)) || 'index.html';
+      if(page.indexOf('/') >= 0 || page.indexOf('\\') >= 0 || !SAFE_NEXT_PAGES[page]) return fallback;
+      var rules = SAFE_NEXT_QUERY[page] || {};
+      var seenKeys = Object.create(null);
+      var valid = true;
+      target.searchParams.forEach(function(value, key){
+        if(!rules[key] || seenKeys[key] || !validNextValue(rules[key], value)) valid = false;
+        seenKeys[key] = true;
+      });
+      if(!valid) return fallback;
+      var hash = target.hash ? decodeURIComponent(target.hash.slice(1)) : '';
+      if(hash && !/^[A-Za-z0-9_-]{1,64}$/.test(hash)) return fallback;
+      return page + target.search + target.hash;
+    }catch(e){ return fallback; }
+  }
+
+  function aiornotHandoffParams(){
+    if(!isAiornotFlow) return null;
+    var returnTo = String(params.get('return') || '').trim();
+    var state = String(params.get('state') || '').trim();
+    var challenge = String(params.get('challenge') || '').trim();
+    if(returnTo !== AIORNOT_CALLBACK_URL || !AIORNOT_STATE_PATTERN.test(state) || !AIORNOT_CHALLENGE_PATTERN.test(challenge)) return null;
+    return { returnTo:returnTo, state:state, challenge:challenge };
+  }
+
+  /* ── 检查是否已见过拦截 ──
+     access token 有效时立即回跳；只剩 refresh token 时必须先真正刷新成功，
+     不能把“本机里有一串旧 token”误判为已经登录。 */
+  var seen = localStorage.getItem('eo_intercept_seen');
+  var pendingSessionResume = null;
+  var pendingSessionTarget = safeNext(localStorage.getItem('eo_intercept_redirect'), 'character.html#profile-card');
+  if(seen === '1' && !isLoginEntry){
+    if(window.EOSession && window.EOSession.accessTokenUsable(0)){
+      localStorage.removeItem('eo_intercept_redirect');
+      window.location.replace(pendingSessionTarget);
+      return;
+    }
+    if(window.EOSession && window.EOSession.refreshToken()){
+      /* refresh() preserves transient network/server failures as rejections,
+         while revoked/expired sessions are cleared and resolve to the login
+         recovery UI. ensureAccessToken() intentionally suppresses errors and
+         made outages look like an expired account. */
+      pendingSessionResume = window.EOSession.refresh();
+    }else if(!window.EOSession && localStorage.getItem('eo_access_token')){
+      localStorage.removeItem('eo_intercept_redirect');
+      window.location.replace(pendingSessionTarget);
+      return;
+    }
+  }
+
+  var mask   = document.getElementById('interceptMask');
+  var btnLogin  = document.getElementById('btn-login');
+  var btnExisting = document.getElementById('btn-existing');
+  var btnQuit   = document.getElementById('btn-quit');
+  var feedback  = document.getElementById('interceptFeedback');
+  var escapeLink = document.getElementById('escapeLink');
+  var loginForm = document.getElementById('existingLoginForm');
+  var loginAccount = document.getElementById('loginAccount');
+  var loginPassword = document.getElementById('loginPassword');
+  var loginCode = document.getElementById('loginCode');
+  var loginPasswordWrap = document.getElementById('loginPasswordWrap');
+  var loginCodeWrap = document.getElementById('loginCodeWrap');
+  var loginModePassword = document.getElementById('loginModePassword');
+  var loginModeCode = document.getElementById('loginModeCode');
+  var loginSendCodeBtn = document.getElementById('loginSendCodeBtn');
+  var loginPolicy = document.getElementById('loginPolicy');
+  var loginCreateBtn = document.getElementById('loginCreateBtn');
+  var loginQuitBtn = document.getElementById('loginQuitBtn');
+  var loginForgotPassword = document.getElementById('loginForgotPassword');
+  var resetPasswordForm = document.getElementById('resetPasswordForm');
+  var resetAccount = document.getElementById('resetAccount');
+  var resetCode = document.getElementById('resetCode');
+  var resetPassword = document.getElementById('resetPassword');
+  var resetPasswordConfirm = document.getElementById('resetPasswordConfirm');
+  var resetSendCodeBtn = document.getElementById('resetSendCodeBtn');
+  var resetCancelBtn = document.getElementById('resetCancelBtn');
+
+  /* ── 状态管理 ── */
+  var quitCount = 0;           /* 同一会话内告辞次数 */
+  var REGISTERED_PROFILE_KEY = 'eo_registered_profile_v1';
+  var ACTIVE_PROFILE_KEY = 'eo_active_profile_v1';
+  var ACCOUNT_KEY = 'eo_account_auth_v1';
+  var ACCESS_TOKEN_KEY = 'eo_access_token';
+  var REFRESH_TOKEN_KEY = 'eo_refresh_token';
+  var API_BASE_KEY = 'eo_api_base';
+  var LOGIN_CODE_COOLDOWN_KEY = 'eo_login_code_cooldown_v1';
+  var loginMode = 'password';
+  var codeLoginEnabled = false;
+  var loginCodeCooldownTimer = null;
+  var loginCodeRequestInFlight = false;
+
+  function readProfile(key){
+    try{
+      var raw = localStorage.getItem(key);
+      var profile = raw ? JSON.parse(raw) : null;
+      return profile && profile.uid ? profile : null;
+    }catch(err){
+      return null;
+    }
+  }
+  function readCachedProfile(){
+    return readProfile(ACTIVE_PROFILE_KEY) || readProfile(REGISTERED_PROFILE_KEY);
+  }
+  function readLocalAccount(){
+    try{
+      var raw = localStorage.getItem(ACCOUNT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(err){
+      return null;
+    }
+  }
+  function writeActiveProfile(profile){
+    try{
+      localStorage.setItem(ACTIVE_PROFILE_KEY, JSON.stringify(profile));
+    }catch(err){}
+  }
+  /* 标记网站登录态：让全站导航的「登录/登出」正确切换（修复登录后仍显示登录的问题） */
+  function markLoggedIn(profile){
+    try{
+      var acc = {};
+      try{ acc = JSON.parse(localStorage.getItem(ACCOUNT_KEY) || '{}') || {}; }catch(e){ acc = {}; }
+      delete acc.password;
+      acc.loggedIn = true;
+      acc.loggedInAt = new Date().toISOString();
+      if(profile && profile.uid) acc.uid = profile.uid;
+      if(profile && profile.email) acc.email = profile.email;
+      if(profile) acc.profile = profile;
+      localStorage.setItem(ACCOUNT_KEY, JSON.stringify(acc));
+    }catch(err){}
+  }
+  function normalizeAuthProfile(data){
+    var user = data && data.user ? data.user : {};
+    var profile = data && (data.profile || data.user);
+    if(!profile || !profile.uid) return null;
+    var rawAvatar = (user.avatar || profile.avatar || '');
+    var avatar = /^(data:|https?:\/\/)/.test(rawAvatar) ? rawAvatar : ((profile.nickname || profile.name || '我').slice(0,1));
+    return {
+      nickname: profile.nickname || profile.name || '未命名玩家',
+      uid: profile.uid,
+      email: profile.email || user.email || '',
+      avatar: avatar,
+      job: profile.job || profile.jobMapped || user.jobMapped || user.job || '角色已登录',
+      shard: profile.shard || [user.birthServer, user.birthRegion].filter(Boolean).join(' · ') || '账号中心同步',
+      birthYear: user.birthYear || profile.birthYear || null,
+      birthMonth: user.birthMonth || profile.birthMonth || null,
+      birthDay: user.birthDay || profile.birthDay || null,
+      birthServer: user.birthServer || profile.birthServer || '',
+      birthRegion: user.birthRegion || profile.birthRegion || '',
+      identityGender: user.identityGender || profile.identityGender || '',
+      bioSex: user.bioSex || profile.bioSex || '',
+      stats: user.stats || profile.stats || null,
+      freePt: typeof user.freePt === 'number' ? user.freePt : (typeof profile.freePt === 'number' ? profile.freePt : null),
+      talents: user.talents || profile.talents || [],
+      jobRaw: user.job || profile.job || '',
+      jobMapped: user.jobMapped || profile.jobMapped || profile.job || '',
+      createdAt: user.createdAt || profile.createdAt || null
+    };
+  }
+  function writeAuthSession(data){
+    if(!data || typeof data.accessToken !== 'string' || !data.accessToken ||
+       typeof data.refreshToken !== 'string' || !data.refreshToken){
+      throw new Error('INVALID_AUTH_RESPONSE');
+    }
+    var profile = normalizeAuthProfile(data);
+    if(!profile || !profile.uid) throw new Error('INVALID_AUTH_RESPONSE');
+    writeActiveProfile(profile);
+    if(data && data.wallet){
+      try{ localStorage.setItem('eo_wallet_v1', JSON.stringify(data.wallet)); }catch(err){}
+    }
+    if(window.EOSession) window.EOSession.storeTokens(data, profile);
+    else try{
+      if(data.accessToken) localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
+      if(data.refreshToken) localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
+    }catch(err){}
+    /* 成就：成功通过出生拦截 —— 仅首次授予一次，用独立持久标记防止每次登录重复触发
+       （成就 map 可能被云同步合并/重置，这个标记不参与同步，永不重触发）*/
+    try{
+      if(window.eoAch && !localStorage.getItem('eo_ach_intercept_once')){
+        localStorage.setItem('eo_ach_intercept_once', '1');
+        window.eoAch.unlock('first_intercept');
+      }
+    }catch(e){}
+  }
+
+  function getLoginTarget(){
+    var explicitNext = params.get('next');
+    var storedNext = localStorage.getItem('eo_intercept_redirect');
+    var target = explicitNext || storedNext || 'character.html#profile-card';
+    if(!target || target === 'intercept.html') return 'character.html#profile-card';
+    target = safeNext(target, 'character.html#profile-card');
+    if(target.indexOf('character.html') === 0 && target.indexOf('?uid=') < 0) return 'character.html#profile-card';
+    return target;
+  }
+
+  function escHtml(value){
+    return String(value == null ? '' : value)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function setFeedback(html){
+    if(!feedback) return;
+    feedback.classList.remove('is-loading');
+    feedback.innerHTML = html;
+  }
+
+  function setLoadingFeedback(text){
+    if(!feedback) return;
+    feedback.classList.add('is-loading');
+    feedback.innerHTML =
+      '<span class="login-connecting" role="status" aria-live="polite">' +
+        '<span class="text">' + escHtml(text) + '</span>' +
+      '</span>';
+  }
+
+  function apiBase(){
+    /* Keep login, refresh and normal API traffic on exactly the same origin/base.
+       On a phone visiting the LAN dev server this intentionally returns an empty
+       base so Vite's /auth proxy is used instead of the phone's localhost. */
+    if(window.EOSession) return window.EOSession.apiBase();
+    return (window.EO_API_BASE || localStorage.getItem(API_BASE_KEY) ||
+      (location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)$/.test(location.hostname) ? 'http://localhost:3000' : ''))
+      .replace(/\/+$/,'');
+  }
+
+  function applyCodeLoginAvailability(enabled){
+    codeLoginEnabled = enabled === true;
+    if(!codeLoginEnabled) setLoginMode('password');
+    if(loginModeCode) loginModeCode.hidden = !codeLoginEnabled;
+    if(loginCodeWrap) loginCodeWrap.hidden = true;
+    if(loginSendCodeBtn) loginSendCodeBtn.hidden = true;
+    if(loginModePassword) loginModePassword.hidden = false;
+    var sub = document.querySelector('.intercept-sub');
+    if(sub && document.body.classList.contains('login-page-mode')){
+      sub.textContent = codeLoginEnabled
+        ? '使用注册手机号或邮箱和密码，也可以使用一次性验证码。'
+        : '使用注册手机号或邮箱和密码登录。';
+    }
+  }
+
+  async function loadLoginConfig(){
+    try{
+      var response = await fetch(apiBase() + '/auth/login-config', { headers:{'Accept':'application/json'} });
+      if(!response.ok) throw new Error('LOGIN_CONFIG_FAILED');
+      var data = await response.json();
+      applyCodeLoginAvailability(data && data.codeLoginEnabled === true);
+    }catch(error){
+      /* Fail closed: password login remains available; OTP login stays hidden. */
+      applyCodeLoginAvailability(false);
+    }
+  }
+
+  function responseErrorCode(data, status){
+    var candidate = '';
+    if(data && typeof data.error === 'string') candidate = data.error;
+    if(!candidate && data && typeof data.message === 'string') candidate = data.message;
+    if(!candidate && data && typeof data.code === 'string') candidate = data.code;
+    if(!candidate && data && data.error && typeof data.error.message === 'string') candidate = data.error.message;
+    if(!candidate && data && data.error && Array.isArray(data.error.issues) && data.error.issues[0]){
+      candidate = data.error.issues[0].message || '';
+    }
+    if(!candidate && data && Array.isArray(data.issues) && data.issues[0]) candidate = data.issues[0].message || '';
+    if(!candidate || candidate === '[object Object]'){
+      if(status === 429) return 'RATE_LIMITED';
+      if(status === 503) return 'LOGIN_SERVICE_UNAVAILABLE';
+      if(status === 400 || status === 422) return 'INVALID_LOGIN_PAYLOAD';
+      return 'LOGIN_FAILED';
+    }
+    return String(candidate);
+  }
+
+  async function authRequest(path, payload){
+    var controller = window.AbortController ? new AbortController() : null;
+    var timer = controller ? setTimeout(function(){ controller.abort(); }, 20000) : null;
+    var response;
+    try{
+      response = await fetch(apiBase() + path, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload),
+        signal: controller ? controller.signal : undefined
+      });
+    }catch(err){
+      var networkError = new Error(err && err.name === 'AbortError' ? 'LOGIN_REQUEST_TIMEOUT' : 'LOGIN_SERVICE_UNAVAILABLE');
+      throw networkError;
+    }finally{
+      if(timer) clearTimeout(timer);
+    }
+
+    var data = null;
+    try{ data = await response.json(); }catch(err){}
+    if(!response.ok){
+      var requestError = new Error(responseErrorCode(data, response.status));
+      requestError.status = response.status;
+      requestError.retryAfter = Math.max(0, Number(response.headers.get('Retry-After')) || 0);
+      throw requestError;
+    }
+    if(!data || typeof data !== 'object') throw new Error('INVALID_AUTH_RESPONSE');
+    return data;
+  }
+
+  async function createAiornotHandoff(authData){
+    var handoff = aiornotHandoffParams();
+    if(!handoff || !authData || typeof authData.accessToken !== 'string' || !authData.accessToken) throw new Error('SUBDOMAIN_HANDOFF_INVALID');
+    var response;
+    try{
+      response = await fetch(apiBase() + '/auth/subdomain-handoff', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer ' + authData.accessToken},
+        body:JSON.stringify({ returnTo:handoff.returnTo, state:handoff.state, codeChallenge:handoff.challenge })
+      });
+    }catch(err){ throw new Error('LOGIN_SERVICE_UNAVAILABLE'); }
+    var data = null;
+    try{ data = await response.json(); }catch(err){}
+    if(!response.ok || !data || typeof data.code !== 'string'){
+      throw new Error(responseErrorCode(data, response && response.status));
+    }
+    return handoff.returnTo + '?code=' + encodeURIComponent(data.code) + '&state=' + encodeURIComponent(handoff.state);
+  }
+
+  function retryAfterText(seconds){
+    var value = Math.max(0, Number(seconds) || 0);
+    if(!value) return '';
+    if(value < 60) return '请在 ' + Math.ceil(value) + ' 秒后重试。';
+    return '请在约 ' + Math.ceil(value / 60) + ' 分钟后重试。';
+  }
+
+  function loginErrorMessage(code, retryAfter){
+    if(code === 'LOGIN_TARGET_LOCKED_TRY_LATER' || code === 'AUTH_TARGET_LOCKED_TRY_LATER'){
+      return '连续验证失败次数过多，该操作已被临时锁定。' + (retryAfterText(retryAfter) || '请稍后再试。');
+    }
+    var map = {
+      INVALID_CREDENTIALS: '账号或密码不正确。',
+      USER_NOT_FOUND: '没有找到这个角色账号。',
+      PASSWORD_OR_CODE_REQUIRED: '请输入密码。',
+      PHONE_OR_EMAIL_REQUIRED: '请输入注册手机号或邮箱。',
+      INVALID_LOGIN_PAYLOAD: '手机号、邮箱或登录凭据格式不正确。',
+      INVALID_ACCOUNT_FORMAT: '请输入正确的中国大陆手机号或邮箱地址。',
+      INVALID_CODE: '验证码不正确或已过期。',
+      TOO_MANY_REQUESTS: '验证码发送太频繁，稍后再试。',
+      VERIFICATION_CODE_COOLDOWN: '刚刚已经发送过验证码，请等待倒计时结束后再试。',
+      VERIFICATION_CODE_SUPERSEDED: '本次验证码请求已被更新的请求替代，请使用最新验证码。',
+      RATE_LIMITED: '请求过于频繁，请稍后再试。',
+      VERIFICATION_DELIVERY_NOT_CONFIGURED: '验证码服务暂时不可用，请稍后再试或改用密码登录。',
+      VERIFICATION_DELIVERY_TIMEOUT: '验证码邮件服务响应超时，请稍后重试或改用密码登录。',
+      VERIFICATION_DELIVERY_FAILED: '验证码邮件发送失败，请稍后重试或改用密码登录。',
+      LOGIN_REQUEST_TIMEOUT: '登录服务响应超时，请检查网络后重试。',
+      INVALID_AUTH_RESPONSE: '登录服务返回了无法识别的角色档案。',
+      INVALID_TOKEN_PAIR: '登录服务返回的会话凭据不完整，请重新登录。',
+      SERVICE_TEMPORARILY_UNAVAILABLE: '登录服务正在恢复，请等待几秒后重试。',
+      LOGIN_SERVICE_UNAVAILABLE: '登录服务暂时不可用，请稍后重试。',
+      CODE_LOGIN_DISABLED: '验证码登录暂时关闭，请使用密码登录。'
+    };
+    return map[code] || '登录失败，请稍后重试。';
+  }
+
+  function loginAccountPayload(account){
+    return /^1[3-9]\d{9}$/.test(account) ? { phone: account } : { email: account };
+  }
+
+  function validLoginAccount(account){
+    return /^1[3-9]\d{9}$/.test(account) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(account);
+  }
+
+  async function requestPasswordLogin(account, password){
+    var payload = loginAccountPayload(account);
+    payload.password = password;
+    return authRequest('/auth/login', payload);
+  }
+
+  async function requestCodeLogin(account, code){
+    var payload = loginAccountPayload(account);
+    payload.code = code;
+    return authRequest('/auth/login', payload);
+  }
+
+  async function requestLoginCode(account){
+    var payload = loginAccountPayload(account);
+    payload.purpose = 'sign-in';
+    return authRequest('/auth/send-code', payload);
+  }
+
+  async function requestResetCode(account){
+    var payload = loginAccountPayload(account);
+    payload.purpose = 'password-reset';
+    return authRequest('/auth/send-code', payload);
+  }
+
+  function clearLoginCodeCooldown(){
+    if(loginCodeCooldownTimer) clearInterval(loginCodeCooldownTimer);
+    loginCodeCooldownTimer = null;
+    if(loginSendCodeBtn){
+      loginSendCodeBtn.disabled = loginCodeRequestInFlight;
+      loginSendCodeBtn.textContent = loginCodeRequestInFlight ? '正在发送…' : '发送验证码';
+    }
+  }
+
+  function startLoginCodeCooldown(account, seconds){
+    var until = Date.now() + Math.max(1, Number(seconds) || 60) * 1000;
+    try{ sessionStorage.setItem(LOGIN_CODE_COOLDOWN_KEY, JSON.stringify({ account:account, until:until })); }catch(err){}
+    if(loginCodeCooldownTimer) clearInterval(loginCodeCooldownTimer);
+    function tick(){
+      var remain = Math.ceil((until - Date.now()) / 1000);
+      if(remain <= 0){
+        clearLoginCodeCooldown();
+        try{ sessionStorage.removeItem(LOGIN_CODE_COOLDOWN_KEY); }catch(err){}
+        return;
+      }
+      if(loginSendCodeBtn){
+        loginSendCodeBtn.disabled = true;
+        loginSendCodeBtn.textContent = remain + ' 秒后重发';
+      }
+    }
+    tick();
+    loginCodeCooldownTimer = setInterval(tick, 1000);
+  }
+
+  function syncLoginCodeCooldown(){
+    if(loginCodeRequestInFlight) return;
+    var account = loginAccount ? loginAccount.value.trim() : '';
+    var saved = null;
+    try{ saved = JSON.parse(sessionStorage.getItem(LOGIN_CODE_COOLDOWN_KEY) || 'null'); }catch(err){}
+    if(saved && saved.account === account && Number(saved.until) > Date.now()){
+      startLoginCodeCooldown(account, Math.ceil((Number(saved.until) - Date.now()) / 1000));
+    }else{
+      clearLoginCodeCooldown();
+    }
+  }
+
+  function setLoginMode(mode){
+    loginMode = (mode === 'code' && codeLoginEnabled) ? 'code' : 'password';
+    if(loginPasswordWrap) loginPasswordWrap.hidden = loginMode !== 'password';
+    if(loginCodeWrap) loginCodeWrap.hidden = loginMode !== 'code';
+    if(loginModePassword) loginModePassword.classList.toggle('active', loginMode === 'password');
+    if(loginModeCode) loginModeCode.classList.toggle('active', loginMode === 'code');
+    if(loginModePassword) loginModePassword.setAttribute('aria-selected', loginMode === 'password' ? 'true' : 'false');
+    if(loginModeCode) loginModeCode.setAttribute('aria-selected', loginMode === 'code' ? 'true' : 'false');
+    setFeedback(loginMode === 'code'
+      ? '<span class="icon">↳</span>验证码将发送到你的注册邮箱或手机号。'
+      : '<span class="icon">↳</span>请输入注册手机号或邮箱和密码。');
+    if(loginMode === 'code') syncLoginCodeCooldown();
+  }
+
+  function openExistingLogin(){
+    var content = document.querySelector('.intercept-content');
+    if(content) content.classList.add('is-login-mode');
+    document.body.classList.add('login-page-mode');
+    var title = document.querySelector('.intercept-title');
+    var sub = document.querySelector('.intercept-sub');
+    if(title) title.innerHTML = '登录您的<span class="accent">角色档案</span>';
+    if(sub) sub.innerHTML = '使用注册手机号或邮箱和密码，也可以使用一次性验证码。';
+    var cached = readCachedProfile();
+    var local = readLocalAccount();
+    if(loginAccount && !loginAccount.value){
+      loginAccount.value = (cached && cached.email) || (local && local.email) || '';
+    }
+    if(loginForm) loginForm.hidden = false;
+    setFeedback('<span class="icon">↳</span>请输入注册手机号或邮箱。没有本机档案也可以登录已有账号。');
+    syncLoginCodeCooldown();
+    if(loginAccount) loginAccount.focus();
+  }
+
+  function openPasswordReset(){
+    if(loginForm) loginForm.hidden = true;
+    if(resetPasswordForm) resetPasswordForm.hidden = false;
+    if(resetAccount && !resetAccount.value) resetAccount.value = loginAccount ? loginAccount.value.trim() : '';
+    var title = document.querySelector('.intercept-title');
+    var sub = document.querySelector('.intercept-sub');
+    if(title) title.innerHTML = '找回您的<span class="accent">角色密码</span>';
+    if(sub) sub.textContent = '验证码只用于确认账号归属；重置后其他设备需要重新登录。';
+    setFeedback('<span class="icon">↳</span>输入注册手机号或邮箱，获取一次性验证码。');
+    if(resetAccount) resetAccount.focus();
+  }
+
+  function closePasswordReset(){
+    if(resetPasswordForm) resetPasswordForm.hidden = true;
+    if(loginForm) loginForm.hidden = false;
+    if(loginAccount && resetAccount) loginAccount.value = resetAccount.value.trim();
+    var title = document.querySelector('.intercept-title');
+    var sub = document.querySelector('.intercept-sub');
+    if(title) title.innerHTML = '登录您的<span class="accent">角色档案</span>';
+    if(sub) sub.innerHTML = '使用注册手机号或邮箱和密码，也可以使用一次性验证码。';
+    setLoginMode('password');
+    if(loginPassword) loginPassword.focus();
+  }
+
+  async function submitExistingLogin(){
+    var account = loginAccount ? loginAccount.value.trim() : '';
+    var password = loginPassword ? loginPassword.value : '';
+    var code = loginCode ? loginCode.value.trim() : '';
+    if(!validLoginAccount(account)){
+      setFeedback('<span class="icon">!</span>' + loginErrorMessage('INVALID_ACCOUNT_FORMAT'));
+      if(loginAccount) loginAccount.focus();
+      return;
+    }
+    if(loginMode === 'password' && password.length < 1){
+      setFeedback('<span class="icon">!</span>请输入密码。');
+      if(loginPassword) loginPassword.focus();
+      return;
+    }
+    if(loginMode === 'code' && !/^\d{4}$/.test(code)){
+      setFeedback('<span class="icon">!</span>请输入 4 位验证码。');
+      if(loginCode) loginCode.focus();
+      return;
+    }
+    if(loginPolicy && !loginPolicy.checked){
+      setFeedback('<span class="icon">!</span>请先勾选并同意玩家条款。');
+      loginPolicy.focus();
+      return;
+    }
+
+    var submitBtn = document.getElementById('loginSubmitBtn');
+    if(submitBtn) submitBtn.disabled = true;
+    setLoadingFeedback('正在连接登录服务');
+
+    try{
+      var data = loginMode === 'code'
+        ? await requestCodeLogin(account, code)
+        : await requestPasswordLogin(account, password);
+      writeAuthSession(data);
+      var profile = data.profile || data.user;
+      markLoggedIn(profile);
+      var target = isAiornotFlow ? await createAiornotHandoff(data) : getLoginTarget();
+      localStorage.setItem('eo_intercept_seen', '1');
+      localStorage.removeItem('eo_intercept_redirect');
+      if(btnExisting) btnExisting.classList.add('clicked');
+      setFeedback('<span class="icon">✓</span>账号验证通过，已载入角色档案：<strong style="color:var(--green)">' + escHtml(profile.uid) + '</strong><br>正在进入 ' + (target.indexOf('character.html') === 0 ? '玩家个人主页' : '目标模块') + '...');
+
+      setTimeout(function(){
+        window.location.replace(target);
+      }, 700);
+    }catch(err){
+      var errCode = err && err.message ? err.message : 'LOGIN_FAILED';
+      setFeedback('<span class="icon">!</span>' + escHtml(loginErrorMessage(errCode, err && err.retryAfter)));
+      if(submitBtn) submitBtn.disabled = false;
+    }
+  }
+
+  /* ── 登录按钮点击 ── */
+  btnLogin.addEventListener('click', function(e){
+    e.preventDefault();
+
+    /* 按钮动画 */
+    btnLogin.classList.add('clicked');
+    feedback.innerHTML = '<span class="icon">⧗</span>正在创建角色档案…';
+
+    /* 0.8秒后跳转到注册流程 */
+    setTimeout(function(){
+      var target = getLoginTarget();
+      if(target.indexOf('cat-kernel') === 0) localStorage.setItem('eo_intercept_redirect', target);
+      window.location.href = 'character.html?mode=register';
+    }, 800);
+  });
+
+  /* ── 登录已有账号 ── */
+  btnExisting.addEventListener('click', function(e){
+    e.preventDefault();
+    var next = params.get('next');
+    window.location.href = 'intercept.html?entry=login' + (next ? '&next=' + encodeURIComponent(next) : '');
+  });
+
+  if(loginCreateBtn){
+    loginCreateBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = getLoginTarget();
+      if(target.indexOf('cat-kernel') === 0) localStorage.setItem('eo_intercept_redirect', target);
+      window.location.href = 'character.html?mode=register';
+    });
+  }
+  if(loginQuitBtn){
+    loginQuitBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      loginQuitBtn.classList.add('phase-1');
+      loginQuitBtn.textContent = '已记录，仍会保留当前档案';
+      feedback.innerHTML = '您的告辞请求已被系统记录。<br>但地球 Online 没有退出到桌面的功能。';
+    });
+  }
+
+  if(loginForm){
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      submitExistingLogin();
+    });
+  }
+  if(loginModePassword) loginModePassword.addEventListener('click', function(){ setLoginMode('password'); });
+  if(loginModeCode) loginModeCode.addEventListener('click', function(){ setLoginMode('code'); });
+  if(loginAccount) loginAccount.addEventListener('input', function(){
+    if(loginMode === 'code') syncLoginCodeCooldown();
+  });
+  if(loginSendCodeBtn){
+    loginSendCodeBtn.addEventListener('click', async function(){
+      if(!codeLoginEnabled) return;
+      if(loginCodeRequestInFlight) return;
+      var account = loginAccount ? loginAccount.value.trim() : '';
+      if(!validLoginAccount(account)){
+        setFeedback('<span class="icon">!</span>' + loginErrorMessage('INVALID_ACCOUNT_FORMAT'));
+        if(loginAccount) loginAccount.focus();
+        return;
+      }
+      loginCodeRequestInFlight = true;
+      loginSendCodeBtn.disabled = true;
+      loginSendCodeBtn.textContent = '正在发送…';
+      setLoadingFeedback('正在发送验证码');
+      try{
+        var data = await requestLoginCode(account);
+        if(loginCode) loginCode.value = '';
+        setFeedback('<span class="icon">✓</span>验证码已发送，请输入收到的 4 位验证码。');
+        loginCodeRequestInFlight = false;
+        startLoginCodeCooldown(account, Number(data.resendAfterSeconds || data.cooldownSeconds) || 60);
+      }catch(err){
+        loginCodeRequestInFlight = false;
+        setFeedback('<span class="icon">!</span>验证码生成失败：' + escHtml(loginErrorMessage(err && err.message ? err.message : 'LOGIN_FAILED', err && err.retryAfter)));
+        if(err && err.status === 429) startLoginCodeCooldown(account, err.retryAfter || 60);
+        else clearLoginCodeCooldown();
+      }
+    });
+  }
+  if(loginForgotPassword) loginForgotPassword.addEventListener('click', openPasswordReset);
+  if(resetCancelBtn) resetCancelBtn.addEventListener('click', closePasswordReset);
+  if(resetSendCodeBtn){
+    resetSendCodeBtn.addEventListener('click', async function(){
+      var account = resetAccount ? resetAccount.value.trim() : '';
+      if(!validLoginAccount(account)){
+        setFeedback('<span class="icon">!</span>' + loginErrorMessage('INVALID_ACCOUNT_FORMAT'));
+        if(resetAccount) resetAccount.focus();
+        return;
+      }
+      resetSendCodeBtn.disabled = true;
+      resetSendCodeBtn.textContent = '正在发送…';
+      setLoadingFeedback('正在发送密码重置验证码');
+      try{
+        var data = await requestResetCode(account);
+        if(resetCode) resetCode.value = '';
+        setFeedback('<span class="icon">✓</span>验证码已发送，有效期 5 分钟。');
+        var until = Date.now() + (Number(data.resendAfterSeconds) || 60) * 1000;
+        var timer = setInterval(function(){
+          var remain = Math.ceil((until - Date.now()) / 1000);
+          if(remain <= 0){ clearInterval(timer); resetSendCodeBtn.disabled = false; resetSendCodeBtn.textContent = '发送验证码'; }
+          else resetSendCodeBtn.textContent = remain + ' 秒后重发';
+        }, 1000);
+      }catch(error){
+        resetSendCodeBtn.disabled = false;
+        resetSendCodeBtn.textContent = '发送验证码';
+        setFeedback('<span class="icon">!</span>' + escHtml(loginErrorMessage(error && error.message ? error.message : 'LOGIN_FAILED', error && error.retryAfter)));
+      }
+    });
+  }
+  if(resetPasswordForm){
+    resetPasswordForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var account = resetAccount ? resetAccount.value.trim() : '';
+      var code = resetCode ? resetCode.value.trim() : '';
+      var password = resetPassword ? resetPassword.value : '';
+      if(!validLoginAccount(account)) return setFeedback('<span class="icon">!</span>' + loginErrorMessage('INVALID_ACCOUNT_FORMAT'));
+      if(!/^\d{4}$/.test(code)) return setFeedback('<span class="icon">!</span>请输入 4 位验证码。');
+      if(password.length < 8 || password.length > 128) return setFeedback('<span class="icon">!</span>新密码需要 8–128 位。');
+      if(password !== (resetPasswordConfirm ? resetPasswordConfirm.value : '')) return setFeedback('<span class="icon">!</span>两次输入的新密码不一致。');
+      var submit = document.getElementById('resetSubmitBtn');
+      if(submit) submit.disabled = true;
+      setLoadingFeedback('正在重置角色密码');
+      try{
+        var payload = loginAccountPayload(account);
+        payload.code = code;
+        payload.password = password;
+        await authRequest('/auth/reset-password', payload);
+        if(loginPassword) loginPassword.value = '';
+        if(resetCode) resetCode.value = '';
+        if(resetPassword) resetPassword.value = '';
+        if(resetPasswordConfirm) resetPasswordConfirm.value = '';
+        closePasswordReset();
+        setFeedback('<span class="icon">✓</span>密码已重置。请使用新密码登录；其他设备的旧会话已经失效。');
+      }catch(error){
+        setFeedback('<span class="icon">!</span>' + escHtml(loginErrorMessage(error && error.message ? error.message : 'LOGIN_FAILED', error && error.retryAfter)));
+      }finally{
+        if(submit) submit.disabled = false;
+      }
+    });
+  }
+
+  if(pendingSessionResume){
+    var pendingContent = document.querySelector('.intercept-content');
+    if(pendingContent) pendingContent.classList.add('is-login-mode');
+    if(mask) mask.setAttribute('aria-busy', 'true');
+    setLoadingFeedback('正在恢复登录状态');
+    pendingSessionResume.then(function(token){
+      if(token){
+        localStorage.removeItem('eo_intercept_redirect');
+        window.location.replace(pendingSessionTarget);
+        return;
+      }
+      if(mask) mask.removeAttribute('aria-busy');
+      openExistingLogin();
+      setFeedback('<span class="icon">!</span>上次登录状态已失效，请重新验证账号。');
+    }).catch(function(){
+      if(mask) mask.removeAttribute('aria-busy');
+      openExistingLogin();
+      setFeedback('<span class="icon">!</span>暂时无法恢复登录状态，请重新登录。');
+    });
+  }else if(isLoginEntry){
+    openExistingLogin();
+  }
+
+  void loadLoginConfig();
+
+  /* ── 返回主世界链接 ── */
+  escapeLink.addEventListener('click', function(e){
+    e.preventDefault();
+    localStorage.setItem('eo_intercept_seen', '1');
+    localStorage.setItem('eo_intercept_redirect', 'index.html');
+    window.location.href = 'index.html';
+  });
+
+  /* ── 告辞按钮三阶段 ── */
+  btnQuit.addEventListener('click', function(e){
+    e.preventDefault();
+    quitCount++;
+
+    if(quitCount === 1){
+      /* 阶段1：变灰 + 提示 */
+      btnQuit.classList.add('phase-1');
+      btnQuit.textContent = '已记录，仍会保留当前档案';
+      feedback.innerHTML = '您的告辞请求已被系统记录。<br>地球 Online 不提供退出到桌面的路径。';
+    }
+    else if(quitCount === 2){
+      /* 阶段2：抖动 + 更灰 */
+      btnQuit.classList.remove('phase-1');
+      btnQuit.classList.add('phase-2');
+      btnQuit.textContent = '真的走了？';
+      feedback.innerHTML = '系统已记录您第 2 次告辞意图。<br>请确认您已做好放弃角色档案的准备。';
+    }
+    else if(quitCount === 3){
+      /* 阶段3：按钮消失 + 纯展示彩蛋；登录页不得解锁或写入任何成就。 */
+      btnQuit.classList.remove('phase-2');
+      btnQuit.classList.add('hidden');
+      btnLogin.classList.add('clicked');
+      /* 这只是登录页彩蛋，不是账号成就。 */
+      feedback.innerHTML = '';
+      var ach = document.createElement('div');
+      ach.className = 'intercept-achievement';
+      ach.textContent = '✦ 彩蛋触发：勇气可嘉 ✦';
+      feedback.appendChild(ach);
+
+      /* 如果同一会话内第3次，直接标记已见过并跳转 */
+      /* 注：为了体验，做到3次就放过用户，跳转index */
+      setTimeout(function(){
+        localStorage.setItem('eo_intercept_seen', '1');
+        localStorage.setItem('eo_intercept_redirect', 'index.html');
+        window.location.href = 'index.html';
+      }, 2000);
+    }
+  });
+
+})();
+</script>
+<script src="assets/eo-launch.js?v=ER20260717site13"></script>
+</body>
+</html>
