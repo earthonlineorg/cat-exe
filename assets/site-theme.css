@@ -1,0 +1,471 @@
+/* EARTH.ONLINE site-wide theme layer.
+   Loaded after page and mobile styles so light-mode corrections remain
+   authoritative without changing the established dark presentation. */
+
+.site-theme-live{
+  position:fixed;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+
+.site-theme-corner{
+  position:fixed;z-index:10020;top:max(16px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));
+  width:48px;height:48px;padding:3px;border:1px solid var(--line-2,rgba(232,230,225,.22));border-radius:50%;
+  background:var(--bg-1,#111116);box-shadow:0 14px 38px rgba(0,0,0,.18);cursor:pointer;
+}
+.site-theme-corner img{display:block;width:100%;height:100%;object-fit:contain;transition:transform .52s cubic-bezier(.2,.8,.2,1)}
+.site-theme-corner:hover img,.site-theme-corner:focus-visible img{transform:rotate(18deg) scale(1.04)}
+.site-theme-corner:focus-visible{outline:2px solid var(--rust-3,#c95c42);outline-offset:3px}
+
+[data-site-theme-toggle]{position:relative;isolation:isolate;-webkit-tap-highlight-color:transparent}
+.brand-logo-link[data-site-theme-toggle]{border-radius:50%;overflow:visible}
+.brand-logo-link[data-site-theme-toggle]::before{
+  content:"";position:absolute;inset:3px;border:1px solid transparent;border-radius:50%;
+  opacity:.68;transition:border-color .25s ease,transform .45s cubic-bezier(.2,.8,.2,1),opacity .25s;
+}
+.brand-logo-link[data-site-theme-toggle]::after{
+  content:attr(data-theme-target) " / MODE";position:absolute;left:0;top:calc(100% + 10px);
+  width:max-content;padding:5px 8px;border:1px solid var(--line-2);background:var(--bg-1);
+  color:var(--ink-0);font:9px/1.2 var(--mono);letter-spacing:.15em;text-transform:uppercase;
+  opacity:0;pointer-events:none;transform:translateY(-3px);transition:opacity .18s,transform .18s;
+  box-shadow:0 10px 30px rgba(0,0,0,.14);
+}
+.brand-logo-link[data-site-theme-toggle]:hover::before,
+.brand-logo-link[data-site-theme-toggle]:focus-visible::before{border-color:var(--rust-3);transform:rotate(28deg) scale(1.08)}
+.brand-logo-link[data-site-theme-toggle]:hover::after,
+.brand-logo-link[data-site-theme-toggle]:focus-visible::after{opacity:1;transform:translateY(0)}
+.brand-logo-link[data-site-theme-toggle]:focus-visible{outline:1px solid var(--rust-3);outline-offset:4px}
+[data-site-theme-toggle] .brand-logo,.m-site-theme-toggle img{transition:transform .52s cubic-bezier(.2,.8,.2,1),filter .3s ease}
+[data-site-theme-toggle]:active .brand-logo,.m-site-theme-toggle:active img{transform:scale(.92) rotate(12deg)}
+
+.eo-theme-transition body,
+.eo-theme-transition body :is(.strip,.nav,.section,.subpage-hero,.cm-hero,.cm-panel,.pp-shell,.rv-card,.task-card,.product-card,.fnd-card,.save-card,footer,.m-appbar,.m-context-nav,.m-tabbar,.m-sheet-mask){
+  transition:background-color .42s ease,color .34s ease,border-color .34s ease,filter .42s ease,box-shadow .42s ease!important;
+}
+
+/* Dark is an explicit theme contract, not merely the absence of the light
+   override. This keeps cached page CSS and local component token islands from
+   pairing paper ink with the night background after a live theme switch. */
+html[data-theme="dark"]{background:#08080a;color-scheme:dark}
+html[data-theme="dark"] body:not(.ia-claude){
+  --bg-0:#08080a;
+  --bg-1:#0d0d10;
+  --bg-2:#13131a;
+  --bg-3:#1c1c25;
+  --bg-4:#23232c;
+  --line:rgba(232,230,225,.07);
+  --line-2:rgba(232,230,225,.14);
+  --line-3:rgba(232,230,225,.28);
+  --ink-0:#e8e6e1;
+  --ink-1:#a8a39a;
+  --ink-2:#918c84;
+  --ink-3:#827d75;
+  --rust:#9b3a2b;
+  --rust-2:#b54836;
+  --rust-3:#d2614c;
+  --rust-deep:#7a2a1f;
+  --rust-soft:rgba(155,58,43,.14);
+  --rust-edge:rgba(155,58,43,.4);
+  --rev:#e23725;
+  --rev-2:#c12a1a;
+  --rev-deep:#7a1a10;
+  --rev-soft:rgba(226,55,37,.14);
+  --bone:#ece7da;
+  --bone-2:#d8d2c2;
+  --mustard:#e0b833;
+  --amber:#c5832d;
+  --amber-soft:rgba(197,131,45,.14);
+  --green:#6dab7c;
+  --green-soft:rgba(90,155,106,.14);
+  --blue:#7694b6;
+  --ink-rev:#0a0807;
+  --theme-bg:#08080a;
+  --grid-line:rgba(232,230,225,.022);
+  --chrome-bg:#000;
+  --nav-bg:rgba(8,8,10,.78);
+  --hover-fill:rgba(232,230,225,.04);
+  --m-edge:rgba(232,230,225,.12);
+  --m-text-tertiary:#918c84;
+  --m-accent-text:#d2614c;
+  --m-shell-bg:rgba(8,8,10,.96);
+  background:#08080a;color:#e8e6e1;
+}
+html[data-theme="dark"] body:not(.ia-claude) :is(input,textarea,select){color-scheme:dark}
+html[data-theme="dark"] body:not(.ia-claude) :is(.save-mask,.intercept-mask,.m-sheet-mask){
+  --ink-1:#a8a39a;--ink-2:#918c84;--ink-3:#827d75;
+}
+html[data-theme="dark"] body:not(.ia-claude) :is(.pd-card,.pd-comment-form,.pd-comment-item,.community-note-card,.community-question,.profile-post-item){
+  background-color:#0d0d10;color:#e8e6e1;
+}
+html[data-theme="dark"] body:not(.ia-claude) :is(.pd-title,.pd-body,.pd-summary,.pd-comment-body,.community-note-card h3,.community-question h3,.profile-post-item h3){
+  color:#e8e6e1;
+}
+html[data-theme="dark"] body:not(.ia-claude) :is(.nd-body,.nd-lead,.legal-doc,.community-note-card p,.community-question p,.profile-post-item p){
+  color:#a8a39a;
+}
+html[data-theme="dark"] body:not(.ia-claude) .nd-article{
+  background:rgba(255,255,255,.025);color:#e8e6e1;
+}
+html[data-theme="dark"] body.contact-page .contact-card .cc-tag{color:#fff8ed}
+
+html[data-theme="light"]{background:#f1eee7;color-scheme:light}
+html[data-theme="light"] body:not(.ia-claude){
+  --bg-0:#f1eee7;
+  --bg-1:#e9e5dc;
+  --bg-2:#dfdad0;
+  --bg-3:#d3cdc1;
+  --bg-4:#c5beb1;
+  --line:rgba(24,28,28,.09);
+  --line-2:rgba(24,28,28,.17);
+  --line-3:rgba(24,28,28,.34);
+  --ink-0:#191d1d;
+  --ink-1:#4c514f;
+  --ink-2:#5f635f;
+  --ink-3:#68645e;
+  --rust:#8f3124;
+  --rust-2:#a53a2a;
+  --rust-3:#a83a2b;
+  --rust-deep:#6f241b;
+  --rust-soft:rgba(143,49,36,.1);
+  --rust-edge:rgba(143,49,36,.32);
+  --rev:#c53a29;
+  --rev-2:#ad2f21;
+  --rev-deep:#741d14;
+  --rev-soft:rgba(197,58,41,.1);
+  --bone:#f4f0e7;
+  --bone-2:#ddd7cc;
+  --mustard:#765817;
+  --amber:#825514;
+  --amber-soft:rgba(130,85,20,.11);
+  --green:#326447;
+  --green-soft:rgba(50,100,71,.1);
+  --blue:#31566c;
+  --ink-rev:#181c1c;
+  --theme-bg:#f1eee7;
+  --grid-line:rgba(24,28,28,.028);
+  --chrome-bg:#e7e2d9;
+  --nav-bg:rgba(241,238,231,.9);
+  --hover-fill:rgba(24,28,28,.045);
+  --m-edge:rgba(24,28,28,.15);
+  --m-text-tertiary:#4c514f;
+  --m-accent-text:#8f3124;
+  --m-shell-bg:rgba(239,235,226,.97);
+  background:#f1eee7;color:#191d1d;
+}
+html[data-theme="light"] body:not(.ia-claude)::after{opacity:.028;mix-blend-mode:multiply}
+html[data-theme="light"] body:not(.ia-claude)::selection{background:#8f3124;color:#fff8ed}
+html[data-theme="light"] body:not(.ia-claude) :is(input,textarea,select){color-scheme:light}
+html[data-theme="light"] body:not(.ia-claude) :is(input,textarea)::placeholder{color:#686b66;opacity:1}
+html[data-theme="light"] body:not(.ia-claude) .site-theme-corner{background:rgba(244,240,231,.96);border-color:rgba(24,28,28,.2);box-shadow:0 12px 36px rgba(57,48,36,.13)}
+
+/* Shared desktop chrome */
+html[data-theme="light"] body:not(.ia-claude) .strip{
+  color:var(--ink-1);box-shadow:0 1px 0 rgba(255,255,255,.5) inset;
+}
+html[data-theme="light"] body:not(.ia-claude) .nav{
+  box-shadow:0 10px 32px rgba(53,45,34,.055);backdrop-filter:blur(16px) saturate(.92);
+}
+html[data-theme="light"] body:not(.ia-claude) .nav.nav-open .nav-links{background:rgba(241,238,231,.98)}
+html[data-theme="light"] body:not(.ia-claude) .brand-logo{filter:drop-shadow(0 5px 12px rgba(54,45,34,.14)) saturate(.88) contrast(1.02)}
+html[data-theme="light"] body:not(.ia-claude) .brand-logo-link[data-site-theme-toggle]::before{border-color:rgba(143,49,36,.22)}
+html[data-theme="light"] body:not(.ia-claude) :is(.subpage-crumbs,.section-eyebrow,.hr-tick,.mono-label){color:var(--ink-1)}
+html[data-theme="light"] body:not(.ia-claude) :is(.subpage-crumbs .now,.section-title .accent,.subpage-h .accent){color:var(--rust)}
+html[data-theme="light"] body:not(.ia-claude) :is(.subpage-crumbs .sep,.section-num,.faint,.dim){color:var(--ink-2)}
+
+/* Interactive surfaces */
+html[data-theme="light"] body:not(.ia-claude) :is(.btn.ghost,.btn:not(.primary):not(.danger),.subpage-back){
+  color:var(--ink-0);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.btn.ghost,.btn:not(.primary):not(.danger),.subpage-back):is(:hover,:focus-visible,:active){
+  color:#fff8ed;background:var(--ink-0);border-color:var(--ink-0);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.btn.primary,.btn.danger){color:#fff8ed}
+html[data-theme="light"] body:not(.ia-claude) :is(.cm-search-submit,.cm-channel-publish,.csb-submit){
+  color:#181c1c;background:#b48226;border-color:#b48226;
+}
+html[data-theme="light"] body:not(.ia-claude) .cm-channel-publish-ic{border-color:currentColor}
+html[data-theme="light"] body:not(.ia-claude) :is(.rv-tag.is-active,.rv-pub-tag.is-active,.pp-tag.is-active){
+  color:#181c1c;background:#b48226;border-color:#8d631c;
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.rv-segment,.pp-segment) input:checked + span{
+  background:rgba(24,28,28,.065);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(input,textarea,select,.field,.search-input,.cm-search-form){
+  border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(input,textarea,select):focus{border-color:var(--rust);outline-color:var(--rust)}
+html[data-theme="light"] body:not(.ia-claude) :is(.modal,.dialog,.panel,.card,.stat,.task-card,.rv-card,.product-card,.eo-live-card,.eo-live-order,.eo-cart-row){
+  box-shadow:0 18px 48px rgba(57,48,36,.055);
+}
+
+/* Authentication, save and overlays reset their local dark token islands. */
+html[data-theme="light"] body:not(.ia-claude) :is(.save-mask,.intercept-mask){
+  --ink-0:#191d1d;--ink-1:#4c514f;--ink-2:#5f635f;--ink-3:#68645e;
+  --line:rgba(24,28,28,.09);--line-2:rgba(24,28,28,.17);--line-3:rgba(24,28,28,.34);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.save-mask,.eo-modal-mask,.report-mask){background:rgba(25,28,28,.38)}
+html[data-theme="light"] body:not(.ia-claude) .intercept-mask{background:rgba(241,238,231,.985)}
+html[data-theme="light"] body:not(.ia-claude) .intercept-login-form{
+  background:rgba(244,240,231,.94);border-color:var(--line-2);box-shadow:0 24px 70px rgba(57,48,36,.12);
+}
+html[data-theme="light"] body:not(.ia-claude) .intercept-login-form :is(input,textarea,select){
+  background:#f7f4ed!important;color:var(--ink-0)!important;border-color:var(--line-2)!important;
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.intercept-sub,.intercept-footnote,#escapeLink){color:var(--ink-1)!important}
+
+/* Community */
+html[data-theme="light"] body:not(.ia-claude) :is(.cm-hero,.cm-panel,.community-note-card,.community-log-feed,.post-detail-shell,.pd-shell,.chat-shell){
+  border-color:var(--line);
+}
+html[data-theme="light"] body:not(.ia-claude) .community-note-card{box-shadow:0 14px 36px rgba(57,48,36,.06)}
+html[data-theme="light"] body:not(.ia-claude) .cm-channels{background:rgba(24,28,28,.035)!important}
+html[data-theme="light"] body:not(.ia-claude) :is(.community-card-menu,.cm-mobile-filter-menu){
+  background:rgba(244,240,231,.99)!important;border-color:var(--line-2)!important;box-shadow:0 12px 30px rgba(57,48,36,.14)!important;
+}
+html[data-theme="light"] body:not(.ia-claude) .community-card-menu :is(.community-share-link,.post-report-link){
+  color:var(--ink-0)!important;background:var(--bg-1)!important;
+}
+html[data-theme="light"] body:not(.ia-claude) .eo-text-card{color:#f4f0e6}
+html[data-theme="light"] body:not(.ia-claude) .eo-text-card :is(.eo-text-card__title,.eo-text-card__copy){color:#f4f0e6}
+html[data-theme="light"] body:not(.ia-claude) .eo-text-card :is(.eo-text-card__label,.eo-text-card__page){color:rgba(244,240,230,.72)}
+html[data-theme="light"] body:not(.ia-claude) :is(.cm-chip.is-on,.dyn-chips .chip.is-active){
+  color:#fff8ed;background:var(--rust);border-color:var(--rust);
+}
+html[data-theme="light"] body.eo-page-bug .cm-hero{
+  background:linear-gradient(180deg,rgba(143,49,36,.055),rgba(24,28,28,.018));
+}
+html[data-theme="light"] body.eo-page-bug .cm-channels{background:rgba(24,28,28,.035)!important}
+html[data-theme="light"] body.eo-page-bug .community-toolbar.v2{
+  background:rgba(241,238,231,.94)!important;border-color:var(--line-2);box-shadow:0 8px 22px rgba(57,48,36,.06);
+}
+html[data-theme="light"] body.eo-page-bug .community-sort :is(span,button){color:var(--ink-1);border-color:var(--line-2)}
+html[data-theme="light"] body.eo-page-bug .community-sort :is(span,button).on{color:var(--amber);border-color:var(--amber);background:var(--amber-soft)}
+html[data-theme="light"] body.eo-page-bug .question-meta-bar{background:rgba(24,28,28,.075);border-color:var(--line-2)}
+html[data-theme="light"] body.eo-page-bug .question-main p{background:rgba(24,28,28,.045);border-color:var(--line-2)}
+html[data-theme="light"] body:not(.ia-claude) :is(.community-page-head,.community-sidebar,.community-main,.community-note-card,.dyn-card,.company-card,.game-card){
+  background-color:rgba(244,240,231,.7);
+}
+
+/* Profile inventory and achievements use opaque night cards in the original
+   skin. On paper those cards must move as one surface, not only recolor text. */
+html[data-theme="light"] body:not(.ia-claude) :is(.ach-slot.has-ach,.ppv3-slot.has-ach,.bp-slot,.bp-card){
+  background-color:rgba(244,240,231,.86);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.ach-slot.has-ach,.ppv3-slot.has-ach) .ach-name{color:var(--ink-1)}
+html[data-theme="light"] body:not(.ia-claude) :is(.bp-hint,.bp-slot-tag,.bp-slot-empty-txt,.ach-count){color:var(--ink-2)}
+
+/* Task page: its world banner becomes pale in the shared light skin, so all
+   content must change from night-ink to paper-ink together. */
+html[data-theme="light"] body.eo-page-task .world-quest-banner :is(.wqb-title,.wqb-ring-pct,.wqb-chip b){color:var(--ink-0)}
+html[data-theme="light"] body.eo-page-task .world-quest-banner :is(.wqb-desc,.wqb-ring-lab,.wqb-chip i){color:var(--ink-1)}
+html[data-theme="light"] body.eo-page-task .world-quest-banner .wqb-tag{color:#2f6144;border-color:rgba(47,97,68,.32);background:rgba(47,97,68,.07)}
+html[data-theme="light"] body.eo-page-task .world-quest-banner .wqb-ring-bg{stroke:rgba(24,28,28,.12)}
+html[data-theme="light"] body.eo-page-task .world-quest-banner .wqb-progress{background:rgba(24,28,28,.08);border-color:rgba(24,28,28,.1)}
+html[data-theme="light"] body:not(.ia-claude) .quest-nav{background:rgba(239,235,226,.96)}
+html[data-theme="light"] body:not(.ia-claude) :is(.task-tab.on,.quest-nav.task-tabs-bar a.active){color:var(--rust);background:rgba(143,49,36,.09)}
+html[data-theme="light"] body:not(.ia-claude) :is(.task-tab.on .ct,.quest-nav.task-tabs-bar a.active .n){color:var(--rust)}
+html[data-theme="light"] body.eo-page-task :is(.hero-daily,.hero-daily .hd-card){background:rgba(244,240,231,.72)}
+html[data-theme="light"] body.eo-page-task .hero-daily .hd-head{background:#ded9cf}
+
+/* The home quest and shop banners deliberately keep their near-black action
+   blocks on paper. The shared ghost-button rule must not turn their labels
+   into near-black ink as well. */
+html[data-theme="light"] body[data-home-theme] :is(.wq-banner,.shop-banner) .cta.btn,
+html[data-theme="light"] body[data-home-theme] :is(.wq-banner,.shop-banner) .cta.btn:is(:hover,:focus-visible,:active){
+  color:#fff8ed;background:#181c1c;border-color:#181c1c;
+}
+
+/* Foundation and news retain cinematic image stages inside the light site.
+   Foundation slide 01 has its own winter-day artwork and therefore switches
+   both its image-stage treatment and foreground ink as one unit. */
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero :is(.foundation-hero-title,.foundation-mission strong){color:#f4f0e7}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero :is(.foundation-mission,.foundation-eyebrow,.subpage-crumbs){color:rgba(244,240,231,.78)}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero .foundation-hero-subtitle{color:#ed806a}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero .legal-note{color:rgba(244,240,231,.82)}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero .fc-carousel{background:#dfe6e8}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero .fc-slide[data-index="0"] .fc-vignette{
+  background:
+    linear-gradient(180deg,rgba(245,248,248,.04) 0%,rgba(236,239,238,.02) 38%,rgba(225,228,225,.30) 72%,rgba(213,210,202,.76) 100%),
+    linear-gradient(90deg,rgba(238,239,236,.18) 0%,transparent 42%,transparent 72%,rgba(231,233,231,.08) 100%);
+}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero .fc-slide[data-index="0"] :is(.fc-text,.fc-index){color:#171c1d}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero .fc-slide[data-index="0"] .fc-label{color:#79342a}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero[data-active-slide="0"] .foundation-hero-title{
+  color:#f4f0e7;-webkit-text-stroke:.5px rgba(6,8,8,.78);paint-order:stroke fill;
+  text-shadow:0 0 1px rgba(0,0,0,.94),0 0 4px rgba(0,0,0,.68),0 0 9px rgba(0,0,0,.30);
+}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero[data-active-slide="0"] .foundation-mission strong{color:#171c1d;text-shadow:0 1px 0 rgba(255,255,255,.66),0 0 16px rgba(244,240,231,.48)}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero[data-active-slide="0"] :is(.foundation-mission,.foundation-eyebrow,.subpage-crumbs,.legal-note){color:rgba(20,24,24,.90);text-shadow:0 1px 0 rgba(255,255,255,.74),0 0 10px rgba(244,240,231,.62)}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero[data-active-slide="0"] .foundation-hero-subtitle{color:#8f3124;text-shadow:0 1px 0 rgba(255,255,255,.78),0 0 12px rgba(244,240,231,.68)}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero[data-active-slide="0"] .foundation-eyebrow{border-color:rgba(25,29,29,.22);background:rgba(244,240,231,.22);backdrop-filter:blur(5px)}
+html[data-theme="light"] body:not(.ia-claude) .foundation-hero[data-active-slide="0"] .fh-grid{
+  background-image:linear-gradient(rgba(24,28,28,.026) 1px,transparent 1px),linear-gradient(90deg,rgba(24,28,28,.026) 1px,transparent 1px);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.news-cinematic,.news-carousel) :is(.nc-slide-sub,.nc-slide-date,.nc-slide-duration){color:rgba(244,240,231,.82)}
+html[data-theme="light"] body:not(.ia-claude) :is(.news-cinematic,.news-carousel) .nc-slide-tag.tag-info{color:#88b7d0}
+html[data-theme="light"] body:not(.ia-claude) :is(.news-cinematic,.news-carousel) .nc-slide-tag.tag-ok{color:#8fc7a0}
+html[data-theme="light"] body:not(.ia-claude) :is(.news-cinematic,.news-carousel) .nc-slide-tag.tag-warn{color:#f0cb61}
+html[data-theme="light"] body:not(.ia-claude) :is(.news-cinematic,.news-carousel) :is(.nc-counter,.nc-counter .sep){color:#f4f0e7}
+html[data-theme="light"] body:not(.ia-claude) .news-carousel .nc-slide-cta .btn:not(.ghost){color:#181c1c}
+html[data-theme="light"] body:not(.ia-claude) .news-carousel .nc-slide-cta .btn.ghost{color:#f4f0e7}
+html[data-theme="light"] body:not(.ia-claude) .news-carousel .nc-slide:hover .nc-slide-cta .btn:not(.ghost){color:#fff8ed}
+html[data-theme="light"] body:not(.ia-claude) :is(.news-tab.is-active .nt-idx,.news-tab.is-active .nt-count){color:var(--rust)}
+html[data-theme="light"] body:not(.ia-claude) .dc-video-badge{color:#973653;border-color:currentColor}
+
+/* Shop, wallet and orders */
+html[data-theme="light"] body:not(.ia-claude) :is(.eo-live-wallet,.eo-live-order,.eo-cart-row,.eo-live-card,.product-card,.order-card){
+  background:rgba(244,240,231,.72);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) .eo-cart-btn{background:rgba(24,28,28,.025);color:var(--ink-1)}
+html[data-theme="light"] body:not(.ia-claude) .pc-cert{color:#704f0c;border-color:rgba(112,79,12,.38);background:rgba(198,155,37,.12)}
+html[data-theme="light"] body:not(.ia-claude) :is(.eo-live-loading,.eo-live-skeleton-label){color:var(--ink-2)}
+html[data-theme="light"] body:not(.ia-claude) .eo-cart-count{color:#fff8ed}
+
+/* Reviews, news and legal content */
+html[data-theme="light"] body:not(.ia-claude) :is(.rv-card,.news-card,.nd-article,.legal-shell,.legal-card){
+  background:rgba(244,240,231,.7);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.pd-card,.pd-comment-form,.pd-comment-item){
+  background:#e9e5dc;color:#191d1d;border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) :is(.pd-title,.pd-body,.pd-summary,.pd-comment-body){color:#191d1d}
+html[data-theme="light"] body:not(.ia-claude) :is(.rv-card.dead,.news-card.is-archived){opacity:.72}
+html[data-theme="light"] body:not(.ia-claude) :is(.legal-shell,.nd-article,.post-detail-shell) :is(p,li){color:var(--ink-1)}
+html[data-theme="light"] body:not(.ia-claude) .legal-doc .legal-eyebrow{color:var(--amber);border-color:var(--line-2)}
+html[data-theme="light"] body:not(.ia-claude) .legal-doc .legal-tail{color:var(--ink-2)}
+html[data-theme="light"] body:not(.ia-claude) .rv-sort-btn.is-on{color:#fff8ed;background:#72500f;border-color:#72500f}
+
+/* Chat remains a dense console in dark mode, but its message surfaces become
+   calm paper panels in light mode. */
+html[data-theme="light"] body:not(.ia-claude) :is(.chatroom-hero-stat,.chatroom-main,.chatroom-panel,.chatroom-head,.chatroom-empty,.chatroom-msg-main,.chatroom-compose){
+  background:rgba(244,240,231,.84);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) .chatroom-msg:hover .chatroom-msg-main,
+html[data-theme="light"] body:not(.ia-claude) .chatroom-msg.is-selected .chatroom-msg-main{background:#e9e2d7;border-color:var(--rust)}
+html[data-theme="light"] body:not(.ia-claude) .chatroom-messages{
+  background-image:linear-gradient(rgba(24,28,28,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(24,28,28,.035) 1px,transparent 1px);
+}
+html[data-theme="light"] body:not(.ia-claude) .chatroom-signal::before{background:rgba(24,28,28,.16)}
+html[data-theme="light"] body:not(.ia-claude) .chatroom-compose textarea:disabled{
+  color:var(--ink-2);background:#e5e0d6;
+}
+
+/* Form-heavy and status-heavy pages. */
+html[data-theme="light"] body:not(.ia-claude) :is(.mf-row input,.mf-shipping input,.review-publish-form input,.review-publish-form textarea){
+  background:#f7f4ed;color:var(--ink-0);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) .medal-tabs .mt.is-active{color:var(--ink-0);background:rgba(50,100,71,.09)}
+html[data-theme="light"] body:not(.ia-claude) .mf-amounts button.active{
+  color:var(--green);background:#dfe7df;border-color:var(--green);
+}
+html[data-theme="light"] body:not(.ia-claude) .medal-sku-virtual{color:#825514}
+html[data-theme="light"] body:not(.ia-claude) .medal-sku-physical{color:#5f625f}
+html[data-theme="light"] body:not(.ia-claude) .medal-sku .msk-vis{
+  background:rgba(244,240,231,.78);border-color:var(--line-2);
+}
+html[data-theme="light"] body:not(.ia-claude) .mf-tier-info .tier-name[data-tier]{color:var(--ink-0)}
+html[data-theme="light"] body:not(.ia-claude) :is(.pp-label-row span:last-child,.dyn-empty,.lg-src-h,.lg-d-h,.wq-reset){color:var(--ink-2)}
+html[data-theme="light"] body.contact-page .contact-card .cc-tag{color:#fff8ed}
+html[data-theme="light"] body.contact-page :is(.contact-compose,.contact-case-entry,.contact-case-note){background:rgba(244,240,231,.76)}
+html[data-theme="light"] body.contact-page .contact-field :is(input,select,textarea){background:#f7f4ed;color:var(--ink-0);border-color:var(--line-2)}
+html[data-theme="light"] body.eo-page-world .save-warn strong[style]{color:var(--ink-0)!important}
+html[data-theme="light"] body:not(.ia-claude) .save-mask .accent{color:var(--rust-deep)}
+html[data-theme="light"] body:not(.ia-claude) .save-mask-small a{color:#272b2a!important;border-color:#272b2a!important}
+
+/* aid.html intentionally keeps one editorial night band in both themes. Its
+   paper-theme metadata therefore needs inverse ink rather than inherited
+   body ink. */
+html[data-theme="light"] body:not(.ia-claude) #modules:has(#amTracks) .ntp-eyebrow{
+  color:#d8d4ca;border-color:rgba(244,240,231,.22);
+}
+html[data-theme="light"] body:not(.ia-claude) #modules:has(#amTracks) .ntp-eyebrow :is(.mono,.ntp-meta){
+  color:#aaa9a3;
+}
+
+/* Existing artisan pages are already paper-first. Raise their smallest copy
+   to the same readable floor without changing that independent visual skin. */
+.ia-claude :is(.ia-land-foot,.ia-card-foot,.sub,.ia-land-en){color:#625b54}
+.ia-claude :is(.ia-nav .is-active,.ia-nav a:hover,.ia-toplite-nav .is-active,.ia-toplite-nav a:hover){color:#67261d}
+.ia-claude small{color:#6f675f}
+.ia-claude .ia-card-no{color:#a04b2c}
+
+/* Semantic colors need darker ink values on paper. */
+html[data-theme="light"] body:not(.ia-claude) :is(.g,.ok,.success,.status-ok){color:var(--green)}
+html[data-theme="light"] body:not(.ia-claude) :is(.r,.err,.danger-text,.status-error){color:var(--rust)}
+html[data-theme="light"] body:not(.ia-claude) :is(.b,.info,.status-info){color:var(--blue)}
+html[data-theme="light"] body:not(.ia-claude) :is(.amber,.warn,.status-warn){color:var(--amber)}
+
+/* Shared footer */
+html[data-theme="light"] body:not(.ia-claude):not(.eo-splash-active) footer{
+  background:#ddd7cd;color:var(--ink-1);border-top:1px solid var(--ink-0);
+}
+html[data-theme="light"] body:not(.ia-claude):not(.eo-splash-active) footer .foot-top{border-color:rgba(24,28,28,.17)}
+html[data-theme="light"] body:not(.ia-claude):not(.eo-splash-active) footer :is(.foot-brand .desc,.foot-col a,.foot-bot,.foot-bot .legal,.foot-bot .stamp){color:#4c514f}
+html[data-theme="light"] body:not(.ia-claude):not(.eo-splash-active) footer .foot-col h5{color:#191d1d}
+html[data-theme="light"] body:not(.ia-claude):not(.eo-splash-active) footer .foot-col a:hover{color:#8f3124}
+html[data-theme="light"] body:not(.ia-claude):not(.eo-splash-active) footer .foot-col a .ext{color:#8f3124}
+
+@media (max-width:1023px){
+  .site-theme-corner{top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left));width:46px;height:46px}
+  .m-site-theme-toggle{padding:0;border:0;text-align:left}
+  .m-site-theme-icon{display:grid;place-items:center;flex:0 0 auto;min-width:44px;min-height:44px;margin-left:-8px;background:transparent;color:inherit;cursor:pointer}
+  .m-site-brand .m-mobile-wordmark{align-self:stretch;padding:0 4px 0 0;color:inherit;text-decoration:none}
+  .m-site-theme-toggle::after{
+    content:"";position:absolute;left:23px;top:31px;width:7px;height:7px;border-radius:50%;
+    background:var(--rust-3);border:2px solid var(--m-shell-bg,#08080a);box-shadow:0 0 0 1px rgba(0,0,0,.12);
+  }
+  html[data-theme="light"] body:not(.ia-claude) :is(.m-appbar,.m-context-nav,.m-tabbar){
+    --ink-0:#191d1d;--ink-1:#4c514f;--bg-0:#f1eee7;--rev:#a83a2b;
+    background:rgba(239,235,226,.97)!important;color:#191d1d!important;
+    border-color:rgba(24,28,28,.14)!important;box-shadow:0 8px 28px rgba(57,48,36,.08)!important;
+  }
+  html[data-theme="light"] body:not(.ia-claude) :is(.m-appbar-inner,.m-appbar-brand,.m-context-back){color:#191d1d}
+  html[data-theme="light"] body:not(.ia-claude) .m-site-theme-toggle::after{border-color:#efebe2}
+  html[data-theme="light"] body:not(.ia-claude) .m-tab-label{color:#4c514f!important}
+  html[data-theme="light"] body:not(.ia-claude) .m-tab.is-active .m-tab-label{color:#191d1d!important}
+  html[data-theme="light"] body:not(.ia-claude) .m-tab-icon-logo img{filter:saturate(.74) contrast(.92)}
+  html[data-theme="light"] body:not(.ia-claude) .m-tab.is-active .m-tab-icon-logo img{filter:saturate(1.05) contrast(1.04)}
+  html[data-theme="light"] body:not(.ia-claude) .m-sheet-mask{
+    --bg-1:#ebe6dc;--line:rgba(24,28,28,.1);--line-2:rgba(24,28,28,.17);--line-3:rgba(24,28,28,.3);
+    --ink-0:#191d1d;--ink-1:#4c514f;--ink-2:#5f635f;--rust-soft:rgba(143,49,36,.1);
+    background:rgba(25,28,28,.36);
+  }
+  html[data-theme="light"] body:not(.ia-claude) :is(.m-more-sheet,.m-sheet,.m-sheet-panel){background:#ebe6dc;color:#191d1d}
+
+  /* Mobile CSS uses opaque night bars for sticky controls. In light mode all
+     of those controls move together onto the same paper shell; their active
+     rust/gold states remain legible instead of becoming dark-on-dark. */
+  html[data-theme="light"] body:not(.ia-claude) :is(
+    .form-actions,.rv-form-actions,.pp-actions,.step-nav,.step-ctrl,
+    .pd-buybar,.cart-checkout,.wallet-actionbar,.task-tabs-bar,.quest-nav,
+    .cm-channels,.join-nav-row
+  ){
+    background:rgba(239,235,226,.98)!important;border-color:rgba(24,28,28,.15)!important;
+    box-shadow:0 8px 28px rgba(57,48,36,.08)!important;
+  }
+  html[data-theme="light"] body[data-mobile-page="party.html"] #ptyTabs,
+  html[data-theme="light"] body[data-mobile-page="chatroom.html"] .chatroom-compose,
+  html[data-theme="light"] body[data-mobile-page="post-detail.html"] .pd-actions,
+  html[data-theme="light"] body[data-mobile-page="review-detail.html"] .rv-detail-card .rv-actions{
+    background:rgba(239,235,226,.985)!important;border-color:rgba(24,28,28,.15)!important;
+    box-shadow:0 -8px 26px rgba(57,48,36,.09)!important;
+  }
+  html[data-theme="light"] body[data-mobile-page="party.html"] #ptyTabs .task-tab{
+    color:var(--ink-1)!important;border-color:var(--line)!important;
+  }
+  html[data-theme="light"] body[data-mobile-page="party.html"] #ptyTabs .task-tab.on{
+    color:var(--rust)!important;background:var(--rust-soft)!important;
+  }
+  html[data-theme="light"] body:not(.ia-claude) :is(.task-tabs-bar,.quest-nav) :is(.task-tab,a){color:var(--ink-1)}
+  html[data-theme="light"] body:not(.ia-claude) :is(.task-tabs-bar,.quest-nav) :is(.task-tab.on,a.active){color:var(--rust)}
+  html[data-theme="light"] body[data-mobile-page="join.html"] .join-nav-row :disabled{
+    color:#5f625f!important;background:#e4dfd5!important;border-color:rgba(24,28,28,.15)!important;opacity:1;
+  }
+}
+
+@media (max-width:720px){
+  .brand-logo-link[data-site-theme-toggle]::after{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  [data-site-theme-toggle] img,[data-site-theme-toggle]::before{transition:none!important}
+}
